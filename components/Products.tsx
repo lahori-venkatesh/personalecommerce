@@ -232,8 +232,8 @@ export default function Products() {
 
       {showModal && selectedProduct && (
         <BookingModal
-          type="product"
-          product={selectedProduct}
+          type="custom-product"
+          entityId={selectedProduct.id}
           onClose={() => {
             setShowModal(false)
             setSelectedProduct(null)

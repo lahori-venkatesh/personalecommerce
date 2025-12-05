@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const order = await prisma.order.update({
-      where: { id: params.id },
+      where: { id },
       data: { fulfilled: true }
     })
 

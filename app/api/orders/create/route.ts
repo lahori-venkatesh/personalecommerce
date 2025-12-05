@@ -119,7 +119,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       orderId: order.id,
       razorpayOrderId: razorpayOrder.id,
-      amount: razorpayOrder.amount / 100
+      amount: Number(razorpayOrder.amount) / 100
     })
   } catch (error) {
     console.error('Error creating order:', error)

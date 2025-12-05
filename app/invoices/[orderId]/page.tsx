@@ -95,7 +95,7 @@ export default async function InvoicePage({ params }: { params: { orderId: strin
         {/* Print Button (Hidden in Print) */}
         <div className="mt-8 text-center print:hidden">
           <button
-            onClick="window.print()"
+            onClick={() => window.print()}
             className="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Print Invoice

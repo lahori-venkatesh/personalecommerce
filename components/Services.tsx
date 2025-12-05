@@ -262,8 +262,8 @@ export default function Services() {
 
       {showModal && selectedService && (
         <BookingModal
-          type="service"
-          service={selectedService}
+          type="custom-service"
+          entityId={selectedService.id}
           onClose={() => {
             setShowModal(false)
             setSelectedService(null)
