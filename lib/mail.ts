@@ -1,8 +1,4 @@
-import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
-
-const mailerSend = new MailerSend({
-  apiKey: process.env.MAILERSEND_API_KEY || '',
-});
+import nodemailer from 'nodemailer'
 
 export async function sendEmail({
   to,
@@ -14,21 +10,25 @@ export async function sendEmail({
   html: string
 }) {
   try {
-    const sentFrom = new Sender(process.env.MAILERSEND_FROM_EMAIL || "info@venkateshlahori.com", process.env.MAILERSEND_FROM_NAME || "Venkatesh Lahori");
-    const recipients = [
-      new Recipient(to, to)
-    ];
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    })
 
-    const emailParams = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo(recipients)
-      .setSubject(subject)
-      .setHtml(html);
+    const mailOptions = {
+      from: process.env.SMTP_USER, // Sender address (must be the same as auth user for Gmail)
+      to: to,
+      subject: subject,
+      html: html,
+    }
 
-    const response = await mailerSend.email.send(emailParams);
+    const info = await transporter.sendMail(mailOptions)
 
-    console.log('Message sent:', response);
-    return { success: true, response }
+    console.log('Message sent: %s', info.messageId)
+    return { success: true, response: info }
   } catch (error) {
     console.error('Error sending email:', error)
     return { success: false, error }
