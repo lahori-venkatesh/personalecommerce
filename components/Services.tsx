@@ -53,7 +53,7 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
           )}
 
           {/* Gradient Overlay for Text */}
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
 
           {/* Title and Description Overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-6 z-20 text-white">
