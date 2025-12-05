@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  phone     String?  @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  duration    String?
+  format      String?
+  price       Float
+  includes    String   // JSON array of strings
+  category    String   @default("Other")
+  requiredInput String @default("None") // None, Resume, LinkedIn
+  salesCount  Int      @default(0)
+  showSalesCount Boolean @default(false)
+  autoIncrementSales Boolean @default(false)
+  isPopular   Boolean  @default(false)
+  isBestSeller Boolean @default(false)
+  meetingUrl  String?
+  features    String   @default("[]") // JSON array of strings
+  resumePreviewImage String?
+  resumeGuidePdf String?
+  resumeTemplateLink String?
+  whatsappGroupLink String?
+  platform    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  detailedDescription String?
+  excerpt     String?
+  price       Float
+  rating      Float    @default(0)
+  soldCount   Int      @default(0)
+  fileUrl     String?
+  previewUrl  String?
+  image       String?
+  category    String   @default("Other")
+  isPopular   Boolean  @default(false)
+  isBestSeller Boolean @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+  serviceId     String?
+  service       Service?    @relation(fields: [serviceId], references: [id])
+  productId     String?
+  product       Product?    @relation(fields: [productId], references: [id])
+  type          String      // "service" or "product"
+  status        String      @default("pending") // pending, paid, cancelled, refunded
+  paymentStatus String      @default("pending") // pending, paid, failed, refunded
+  amount        Float
+  currency      String      @default("INR")
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  customerName  String
+  customerEmail String
+  customerPhone String
+  slotDateTime  DateTime?
+  fulfilled     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  quote     String
+  rating    Int      @default(5)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HeroSettings {
+  id          String   @id @default(cuid())
+  title       String   @default("Master Your Technical Interviews")
+  subtitle    String   @default("Unlock your potential with personalized coaching, expert mentorship, and curated resources designed for your success.")
+  theme       String   @default("Modern") // Modern, Minimal, Bold
+  
+  // Button 1
+  button1Text String   @default("Book a Session")
+  button1Link String   @default("session") // session, priority-dm, notes
+  button1Show Boolean  @default(true)
+
+  // Button 2
+  button2Text String   @default("Priority DM")
+  button2Link String   @default("priority-dm")
+  button2Show Boolean  @default(true)
+
+  // Stats (JSON)
+  stats       String   @default("[{\"label\":\"Students Mentored\",\"value\":\"500+\"},{\"label\":\"Success Rate\",\"value\":\"95%\"},{\"label\":\"Companies Cracked\",\"value\":\"50+\"},{\"label\":\"Rating\",\"value\":\"4.9/5\"}]")
+
+  updatedAt   DateTime @updatedAt
+}
+
