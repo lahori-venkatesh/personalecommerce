@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
 import { sendEmail } from '@/lib/mail'
-import { emailTemplates } from '@/lib/email-templates'
+import { getOrderConfirmationEmail } from '@/lib/email-templates'
 
 export async function POST(request: Request) {
   try {
@@ -55,10 +55,11 @@ export async function POST(request: Request) {
 
     // Send confirmation email
     try {
+      const itemName = order.service?.title || order.product?.title || 'Item'
       await sendEmail({
         to: order.customerEmail,
         subject: 'Order Confirmation - Venkatesh Lahori',
-        html: emailTemplates.orderConfirmation(order),
+        html: getOrderConfirmationEmail(order.customerName, order.id, order.amount, itemName),
       })
     } catch (emailError) {
       console.error('Failed to send confirmation email:', emailError)

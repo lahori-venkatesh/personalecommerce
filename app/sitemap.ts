@@ -4,17 +4,24 @@ import { prisma } from '@/lib/prisma'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://venkateshlahori.com'
 
-  // Fetch all active services
-  const services = await prisma.service.findMany({
-    where: { isActive: true },
-    select: { id: true, updatedAt: true }
-  })
+  let services: { id: string; updatedAt: Date }[] = []
+  let products: { id: string; updatedAt: Date }[] = []
 
-  // Fetch all active products
-  const products = await prisma.product.findMany({
-    where: { isActive: true },
-    select: { id: true, updatedAt: true }
-  })
+  try {
+    // Fetch all active services
+    services = await prisma.service.findMany({
+      where: { isActive: true },
+      select: { id: true, updatedAt: true }
+    })
+
+    // Fetch all active products
+    products = await prisma.product.findMany({
+      where: { isActive: true },
+      select: { id: true, updatedAt: true }
+    })
+  } catch (error) {
+    console.warn('Failed to fetch data for sitemap (using static pages only):', error)
+  }
 
   const serviceUrls = services.map((service) => ({
     url: `${baseUrl}/services/${service.id}`,

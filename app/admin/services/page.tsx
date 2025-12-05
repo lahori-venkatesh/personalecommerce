@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, X } from 'lucide-react'
+import CloudinaryUploadWidget from '@/components/CloudinaryUploadWidget'
 
 interface Service {
   id: string
@@ -65,10 +66,16 @@ export default function AdminServices() {
     try {
       const res = await fetch('/api/services')
       const data = await res.json()
-      setServices(data)
+      if (Array.isArray(data)) {
+        setServices(data)
+      } else {
+        console.warn('API returned non-array data:', data)
+        setServices([])
+      }
       setLoading(false)
     } catch (error) {
-      console.error('Error fetching services:', error)
+      console.warn('Error fetching services (using empty list):', error)
+      setServices([])
       setLoading(false)
     }
   }
@@ -237,13 +244,19 @@ export default function AdminServices() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Resume Preview Image URL</label>
-                    <input
-                      type="text"
-                      value={formData.resumePreviewImage}
-                      onChange={(e) => setFormData({ ...formData, resumePreviewImage: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                      placeholder="https://..."
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={formData.resumePreviewImage}
+                        onChange={(e) => setFormData({ ...formData, resumePreviewImage: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        placeholder="https://..."
+                      />
+                      <CloudinaryUploadWidget
+                        onUpload={(url) => setFormData(prev => ({ ...prev, resumePreviewImage: url }))}
+                        folder="services"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
@@ -259,23 +272,37 @@ export default function AdminServices() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Resume Guide PDF URL</label>
-                    <input
-                      type="text"
-                      value={formData.resumeGuidePdf}
-                      onChange={(e) => setFormData({ ...formData, resumeGuidePdf: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                      placeholder="https://..."
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={formData.resumeGuidePdf}
+                        onChange={(e) => setFormData({ ...formData, resumeGuidePdf: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        placeholder="https://..."
+                      />
+                      <CloudinaryUploadWidget
+                        onUpload={(url) => setFormData(prev => ({ ...prev, resumeGuidePdf: url }))}
+                        buttonText="Upload PDF"
+                        folder="services/pdfs"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Template Link</label>
-                    <input
-                      type="text"
-                      value={formData.resumeTemplateLink}
-                      onChange={(e) => setFormData({ ...formData, resumeTemplateLink: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                      placeholder="https://..."
-                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={formData.resumeTemplateLink}
+                        onChange={(e) => setFormData({ ...formData, resumeTemplateLink: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        placeholder="https://..."
+                      />
+                      <CloudinaryUploadWidget
+                        onUpload={(url) => setFormData(prev => ({ ...prev, resumeTemplateLink: url }))}
+                        buttonText="Upload File"
+                        folder="services/templates"
+                      />
+                    </div>
                   </div>
                 </div>
               </>

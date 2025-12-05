@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/components/AdminLayout'
 import { Plus, Edit, Trash2 } from 'lucide-react'
+import CloudinaryUploadWidget from '@/components/CloudinaryUploadWidget'
 
 interface Product {
   id: string
@@ -52,10 +53,16 @@ export default function AdminProducts() {
     try {
       const res = await fetch('/api/products')
       const data = await res.json()
-      setProducts(data)
+      if (Array.isArray(data)) {
+        setProducts(data)
+      } else {
+        console.warn('API returned non-array data:', data)
+        setProducts([])
+      }
       setLoading(false)
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.warn('Error fetching products (using empty list):', error)
+      setProducts([])
       setLoading(false)
     }
   }
@@ -270,33 +277,53 @@ export default function AdminProducts() {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Product Image URL</label>
-                <input
-                  type="url"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="https://..."
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="https://..."
+                  />
+                  <CloudinaryUploadWidget
+                    onUpload={(url) => setFormData(prev => ({ ...prev, image: url }))}
+                    folder="products"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">File URL (Main PDF)</label>
-                <input
-                  type="url"
-                  value={formData.fileUrl}
-                  onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="https://..."
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={formData.fileUrl}
+                    onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="https://..."
+                  />
+                  <CloudinaryUploadWidget
+                    onUpload={(url) => setFormData(prev => ({ ...prev, fileUrl: url }))}
+                    buttonText="Upload PDF"
+                    folder="products/files"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Preview URL (Preview PDF)</label>
-                <input
-                  type="url"
-                  value={formData.previewUrl}
-                  onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="https://..."
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={formData.previewUrl}
+                    onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="https://..."
+                  />
+                  <CloudinaryUploadWidget
+                    onUpload={(url) => setFormData(prev => ({ ...prev, previewUrl: url }))}
+                    buttonText="Upload Preview"
+                    folder="products/previews"
+                  />
+                </div>
               </div>
             </div>
 

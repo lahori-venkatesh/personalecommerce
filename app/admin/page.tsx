@@ -22,13 +22,21 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetch('/api/admin/stats')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch stats')
+        return res.json()
+      })
       .then(data => {
-        setStats(data)
+        setStats(data || {
+          totalRevenue: 0,
+          totalOrders: 0,
+          totalUsers: 0,
+          pendingOrders: 0
+        })
         setLoading(false)
       })
       .catch(err => {
-        console.error('Error fetching stats:', err)
+        console.warn('Error fetching stats (using defaults):', err)
         setLoading(false)
       })
   }, [])
@@ -52,7 +60,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">₹{stats.totalRevenue.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-gray-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -64,7 +72,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats?.totalOrders || 0}</p>
             </div>
           </div>
         </div>
@@ -76,7 +84,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats?.totalUsers || 0}</p>
             </div>
           </div>
         </div>
@@ -88,7 +96,7 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Pending Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.pendingOrders}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats?.pendingOrders || 0}</p>
             </div>
           </div>
         </div>

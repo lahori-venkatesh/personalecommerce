@@ -8,7 +8,7 @@ async function getHeroSettings() {
     const settings = await prisma.heroSettings.findFirst()
     return settings
   } catch (error) {
-    console.error('Error fetching hero settings:', error)
+    console.warn('Error fetching hero settings (using defaults):', error)
     return null
   }
 }
