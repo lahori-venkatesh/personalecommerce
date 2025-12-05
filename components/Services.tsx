@@ -35,10 +35,10 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
   if (service.category === 'Resume Templates') {
     return (
       <div
-        className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100 flex flex-col h-[540px] mt-4"
+        className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100 flex flex-col h-auto sm:h-[540px] mt-4"
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        <div className="h-[80%] bg-gray-100 overflow-hidden relative flex-shrink-0 group-hover:shadow-inner">
+        <div className="h-64 sm:h-[80%] bg-gray-100 overflow-hidden relative flex-shrink-0 group-hover:shadow-inner">
           {service.resumePreviewImage ? (
             <img
               src={service.resumePreviewImage}
@@ -75,8 +75,9 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
           )}
 
           {/* Preview Overlay Button */}
+          {/* Preview Overlay Button - Visible on hover for desktop, always visible on mobile via separate button below */}
           <div
-            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-20"
+            className="hidden sm:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center cursor-pointer z-20"
             onClick={() => service.resumePreviewImage && onPreview(service.resumePreviewImage, service.title)}
           >
             <button className="text-white font-medium px-6 py-3 bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 transition-all transform hover:scale-105 flex items-center gap-2">
@@ -86,7 +87,15 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
           </div>
         </div>
 
-        <div className="p-6 flex flex-col h-[25%] justify-center bg-white relative z-20 border-t border-gray-100">
+        <div className="p-6 flex flex-col sm:h-[25%] justify-center bg-white relative z-20 border-t border-gray-100">
+          {/* Mobile Preview Button */}
+          <button
+            onClick={() => service.resumePreviewImage && onPreview(service.resumePreviewImage, service.title)}
+            className="sm:hidden w-full mb-3 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+          >
+            <Eye size={18} /> Preview Resume
+          </button>
+
           <div className="flex items-center justify-between gap-4">
             <span className="text-2xl font-bold text-gray-900">
               ₹{service.price}
@@ -105,7 +114,7 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
 
   return (
     <div
-      className={`glass rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-primary-200 group relative border border-gray-300 mt-4  ${isExpanded ? 'h-auto' : 'h-[540px]'}`}
+      className={`glass rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-primary-200 group relative border border-gray-300 mt-4 ${isExpanded ? 'h-auto' : 'h-auto sm:h-[540px]'}`}
       style={{ animationDelay: `${index * 100}ms` }}
     >
       {/* Badges */}
@@ -193,7 +202,7 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
         </div>
         <button
           onClick={() => onBook(service)}
-          className="w-full bg-gray-900 text-white py-3 px-4 rounded-xl font-medium hover:bg-primary-600 transition-colors shadow-lg shadow-gray-200 hover:shadow-primary-500/30"
+          className="w-full bg-gray-900 text-white py-3.5 px-4 rounded-xl font-medium hover:bg-primary-600 transition-colors shadow-lg shadow-gray-200 hover:shadow-primary-500/30 active:scale-[0.98] transform"
         >
           Book Now
         </button>

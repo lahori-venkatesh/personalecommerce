@@ -1,0 +1,30 @@
+--- Debugging SMTP Credentials ---
+SMTP_USER found: YES
+SMTP_USER length: 28
+SMTP_USER value: "lahorivenkatesh709@gmail.com"
+SMTP_PASS found: YES
+SMTP_PASS length: 60
+SMTP_PASS has spaces: YES (BAD!)
+SMTP_PASS first char: "
+SMTP_PASS last char: e
+----------------------------------
+Attempting to send test email...
+❌ Failed to send email:
+Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-29daeaab9c0sm49566895ad.68 - gsmtp
+    at SMTPConnection._formatError (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:809:19)
+    at SMTPConnection._actionAUTHComplete (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:1595:34)
+    at SMTPConnection.<anonymous> (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:556:26)
+    at SMTPConnection._processResponse (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)
+    at SMTPConnection._onData (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)
+    at SMTPConnection._onSocketData (/Users/lahorivenkatesh/Desktop/personal project/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+    at TLSSocket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5) {
+  code: 'EAUTH',
+  response: '535-5.7.8 Username and Password not accepted. For more information, go to\n' +
+    '535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-29daeaab9c0sm49566895ad.68 - gsmtp',
+  responseCode: 535,
+  command: 'AUTH PLAIN'
+}

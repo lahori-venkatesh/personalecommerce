@@ -100,17 +100,17 @@ const ProductCard = ({ product, onDetails, onPreview, index }: { product: Produc
             View details <ArrowRight size={14} />
           </button>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => onPreview(product)}
-              className="flex-1 bg-white border border-gray-200 text-gray-700 py-2.5 px-4 rounded-xl hover:bg-gray-50 hover:border-gray-300 font-medium flex items-center justify-center gap-2 transition-all"
+              className="w-full sm:flex-1 bg-white border border-gray-200 text-gray-700 py-3 sm:py-2.5 px-4 rounded-xl hover:bg-gray-50 hover:border-gray-300 font-medium flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
             >
               <Eye size={18} />
               Preview
             </button>
             <button
               onClick={() => onDetails(product)}
-              className="flex-1 bg-primary-600 text-white py-2.5 px-4 rounded-xl hover:bg-primary-700 font-medium flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40"
+              className="w-full sm:flex-1 bg-primary-600 text-white py-3 sm:py-2.5 px-4 rounded-xl hover:bg-primary-700 font-medium flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 active:scale-[0.98]"
             >
               <ShoppingCart size={18} />
               Buy Now

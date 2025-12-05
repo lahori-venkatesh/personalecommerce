@@ -62,7 +62,7 @@ export default function Header() {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-100 animate-fade-in">
+            <div className="md:hidden border-t border-gray-100 animate-fade-in bg-white/95 backdrop-blur-xl rounded-b-2xl shadow-xl absolute left-0 right-0 top-full mx-4 mt-2">
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {['Home', 'About', 'Services', 'Notes'].map((item) => (
                   <Link

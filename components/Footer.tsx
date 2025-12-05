@@ -38,7 +38,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-lg font-semibold mb-6 text-white">Quick Links</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-4 sm:space-y-3">
               {['Home', 'About', 'Services', 'Notes'].map((item) => (
                 <li key={item}>
                   <Link
@@ -61,7 +61,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-lg font-semibold mb-6 text-white">Legal</h4>
-            <ul className="space-y-3">
+            <ul className="space-y-4 sm:space-y-3">
               {[
                 { name: 'Privacy Policy', href: '/policies/privacy-policy' },
                 { name: 'Terms & Conditions', href: '/policies/terms-and-conditions' },
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-gray-800 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+        <div className="pt-8 border-t border-gray-800 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm gap-4">
           <p>© {new Date().getFullYear()} Venkatesh Lahori. All rights reserved.</p>
           <p className="mt-2 md:mt-0">
             Designed with <span className="text-red-500">❤</span> for developers

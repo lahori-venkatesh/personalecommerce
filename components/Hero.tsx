@@ -58,7 +58,7 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   ])
 
   const renderButtons = () => (
-    <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up delay-200">
+    <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up delay-200 w-full sm:w-auto px-4 sm:px-0">
       {(settings?.button1Show ?? true) && (
         <button
           onClick={() => handleAction(settings?.button1Link || 'session')}
@@ -89,7 +89,7 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   if (theme === 'Minimal') {
     return (
       <>
-        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
+        <section className="relative pt-24 pb-12 sm:pt-32 sm:pb-20 overflow-hidden bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl">
               <div className="inline-block mb-6 animate-fade-in">
@@ -98,11 +98,11 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 tracking-tight animate-slide-up leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-6 sm:mb-8 tracking-tight animate-slide-up leading-tight">
                 {title}
               </h1>
 
-              <p className="text-xl text-gray-600 mb-10 max-w-2xl leading-relaxed animate-slide-up delay-100">
+              <p className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-10 max-w-2xl leading-relaxed animate-slide-up delay-100">
                 {subtitle}
               </p>
 
@@ -110,7 +110,7 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
                 {renderButtons()}
               </div>
 
-              <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-12 border-t border-gray-100 pt-10">
+              <div className="mt-12 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 border-t border-gray-100 pt-8 sm:pt-10">
                 {stats.map((stat: any) => (
                   <div key={stat.label}>
                     <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
@@ -134,7 +134,7 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   if (theme === 'Bold') {
     return (
       <>
-        <section className="relative pt-32 pb-20 overflow-hidden bg-gray-50">
+        <section className="relative pt-24 pb-12 sm:pt-32 sm:pb-20 overflow-hidden bg-gray-50">
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -143,17 +143,17 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
               <span>Premium Tech Coaching</span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 tracking-tighter animate-slide-up uppercase">
+            <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-gray-900 mb-6 sm:mb-8 tracking-tighter animate-slide-up uppercase">
               {title}
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-medium animate-slide-up delay-100">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-3xl mx-auto font-medium animate-slide-up delay-100">
               {subtitle}
             </p>
 
             {renderButtons()}
 
-            <div className="mt-20 flex flex-wrap justify-center gap-8 md:gap-16">
+            <div className="mt-12 sm:mt-20 flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-16">
               {stats.map((stat: any) => (
                 <div key={stat.label} className="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 min-w-[160px]">
                   <div className="text-3xl font-black text-black mb-1">{stat.value}</div>
@@ -176,7 +176,7 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   // Modern Theme (Default)
   return (
     <>
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-24 pb-12 sm:pt-32 sm:pb-20 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary-300/30 rounded-full blur-3xl animate-pulse" />
@@ -191,18 +191,18 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 tracking-tight animate-slide-up">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 sm:mb-8 tracking-tight animate-slide-up">
               {title}
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-100">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-100">
               {subtitle}
             </p>
 
             {renderButtons()}
 
             {/* Social Proof / Stats */}
-            <div className="mt-16 pt-8 border-t border-gray-200/60 grid grid-cols-2 md:grid-cols-4 gap-8 animate-fade-in delay-300">
+            <div className="mt-12 sm:mt-16 pt-8 border-t border-gray-200/60 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 animate-fade-in delay-300">
               {stats.map((stat: any) => (
                 <div key={stat.label}>
                   <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
