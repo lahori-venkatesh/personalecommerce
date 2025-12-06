@@ -446,13 +446,24 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
           {!fetchingDetails && step === 2 && requiresReview && (
             <div className="space-y-6">
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 className="text-lg font-semibold mb-3">Invoice Preview</h3>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Item</span>
-                  <span className="font-medium text-gray-900">{displayTitle}</span>
+                <h3 className="text-lg font-semibold mb-3">Order Summary</h3>
+
+                <div className="space-y-3 mb-4">
+                  <div>
+                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Service</span>
+                    <p className="font-medium text-gray-900">{displayTitle}</p>
+                  </div>
+
+                  {entityDetails?.description && (
+                    <div>
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description</span>
+                      <p className="text-sm text-gray-600 leading-relaxed">{entityDetails.description}</p>
+                    </div>
+                  )}
                 </div>
-                <div className="flex justify-between items-center border-t border-gray-200 pt-2 mt-2">
-                  <span className="text-gray-900 font-bold">Total</span>
+
+                <div className="flex justify-between items-center border-t border-gray-200 pt-3 mt-2">
+                  <span className="text-gray-900 font-bold">Total Amount</span>
                   <span className="text-xl font-bold text-gray-900">₹{displayPrice}</span>
                 </div>
               </div>
@@ -489,7 +500,7 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
                 onClick={() => setStep(step - 1)}
                 className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
               >
-                {requiresReview && step === 2 ? 'Back to Edit Details' : 'Back'}
+                {requiresReview && step === 2 ? 'Back to Edit' : 'Back'}
               </button>
             )}
 
