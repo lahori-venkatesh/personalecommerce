@@ -20,7 +20,7 @@ const ImagePreviewModal = ({ imageUrl, altText, onClose }: ImagePreviewModalProp
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm" onClick={onClose}>
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+        className="absolute top-4 right-4 z-[60] text-white/70 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
       >
         <X size={32} />
       </button>

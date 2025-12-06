@@ -35,15 +35,15 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
   if (service.category === 'Resume Templates') {
     return (
       <div
-        className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100 flex flex-col h-auto sm:h-[540px] mt-4"
+        className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-200 flex flex-col h-[540px] mt-4"
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        <div className="h-64 sm:h-[80%] bg-gray-100 overflow-hidden relative flex-shrink-0 group-hover:shadow-inner">
+        <div className="h-[80%] bg-gray-100 overflow-hidden relative flex-shrink-0 group-hover:shadow-inner">
           {service.resumePreviewImage ? (
             <img
               src={service.resumePreviewImage}
               alt={service.title}
-              className="w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+              className="w-full h-full object-cover object-top transform group-hover:scale-110 transition-transform duration-500 cursor-pointer"
               onClick={() => onPreview(service.resumePreviewImage!, service.title)}
             />
           ) : (
@@ -53,16 +53,23 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
           )}
 
           {/* Gradient Overlay for Text */}
-          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black via-black/90 to-transparent z-10 pointer-events-none" />
 
           {/* Title and Description Overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-6 z-20 text-white">
             <h3 className="text-xl font-bold leading-tight mb-1 shadow-sm">
               {service.title}
             </h3>
-            <p className="text-gray-200 text-sm line-clamp-1 shadow-sm opacity-90">
+            <p className="text-gray-200 text-sm line-clamp-2 shadow-sm opacity-90">
               {service.description}
             </p>
+          </div>
+
+          {/* Preview Indicator */}
+          <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+            <div className="text-sm font-bold px-4 py-2 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/20 flex items-center gap-2 shadow-lg">
+              <Eye size={20} /> Preview
+            </div>
           </div>
 
           {/* Platform Badge - Top Right */}
@@ -73,29 +80,9 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
               </div>
             </div>
           )}
-
-          {/* Preview Overlay Button */}
-          {/* Preview Overlay Button - Visible on hover for desktop, always visible on mobile via separate button below */}
-          <div
-            className="hidden sm:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center cursor-pointer z-20"
-            onClick={() => service.resumePreviewImage && onPreview(service.resumePreviewImage, service.title)}
-          >
-            <button className="text-white font-medium px-6 py-3 bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 transition-all transform hover:scale-105 flex items-center gap-2">
-              <Eye size={18} />
-              Preview Full Resume
-            </button>
-          </div>
         </div>
 
-        <div className="p-6 flex flex-col sm:h-[25%] justify-center bg-white relative z-20 border-t border-gray-100">
-          {/* Mobile Preview Button */}
-          <button
-            onClick={() => service.resumePreviewImage && onPreview(service.resumePreviewImage, service.title)}
-            className="sm:hidden w-full mb-3 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
-          >
-            <Eye size={18} /> Preview Resume
-          </button>
-
+        <div className="p-6 flex flex-col h-[20%] justify-center bg-white relative z-20 border-t border-gray-100">
           <div className="flex items-center justify-between gap-4">
             <span className="text-2xl font-bold text-gray-900">
               ₹{service.price}

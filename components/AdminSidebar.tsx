@@ -13,7 +13,8 @@ import {
   Home,
   Menu,
   X,
-  LogOut
+  LogOut,
+  Calendar
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -25,6 +26,7 @@ const menuItems = [
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/revenue', label: 'Revenue', icon: DollarSign },
   { href: '/admin/payments', label: 'Payments', icon: CreditCard },
+  { href: '/admin/slots', label: 'Slot Management', icon: Calendar },
 ]
 
 export default function AdminSidebar() {

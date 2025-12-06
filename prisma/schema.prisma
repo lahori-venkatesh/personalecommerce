@@ -44,9 +44,11 @@ model Service {
   whatsappGroupLink String?
   platform    String?
   isActive    Boolean  @default(true)
+  requiresSlot Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orders      Order[]
+  slots       Slot[]
 }
 
 model Product {
@@ -89,9 +91,22 @@ model Order {
   customerEmail String
   customerPhone String
   slotDateTime  DateTime?
+  slot          Slot?
   fulfilled     Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+}
+
+model Slot {
+  id        String   @id @default(cuid())
+  startTime DateTime
+  isBooked  Boolean  @default(false)
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  orderId   String?  @unique
+  order     Order?   @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Testimonial {
@@ -135,4 +150,3 @@ model HeroSettings {
 
   updatedAt   DateTime @updatedAt
 }
-

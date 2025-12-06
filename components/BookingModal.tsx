@@ -22,8 +22,12 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
     fullName: '',
     email: '',
     whatsapp: '',
-    additionalInfo: ''
+    additionalInfo: '',
+    resumeUrl: '',
+    linkedinUrl: ''
   })
+  const [availableSlots, setAvailableSlots] = useState<any[]>([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null)
 
 
@@ -78,19 +82,68 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
     })
   }
 
+  // Determine if time slot selection is required
+  // Use entityDetails.requiresSlot if available, otherwise fallback to type check
+  const requiresTimeSlot =
+    (entityDetails?.requiresSlot) ||
+    (type === 'session')
+
+  // Determine if review step is required (for Resume Templates)
+  const requiresReview = type === 'custom-service' && entityDetails?.category === 'Resume Templates'
+
+  useEffect(() => {
+    if (requiresTimeSlot && entityId && step === 2) {
+      fetchSlots()
+    }
+  }, [requiresTimeSlot, entityId, step])
+
+  const fetchSlots = async () => {
+    setLoadingSlots(true)
+    try {
+      // If it's a custom service with an ID, fetch from API
+      // If it's a generic 'session' type without ID, we might need a default logic or just use generated slots
+      // For now assuming all slot-based services have an ID
+      if (entityId) {
+        const res = await fetch(`/api/services/${entityId}/slots`)
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          setAvailableSlots(data)
+        }
+      } else {
+        // Fallback for generic session if needed, or just generate
+        setAvailableSlots([])
+      }
+    } catch (error) {
+      console.error('Error fetching slots:', error)
+    } finally {
+      setLoadingSlots(false)
+    }
+  }
+
   const handleContinue = () => {
     if (step === 1) {
       if (!formData.fullName || !formData.email || !formData.whatsapp) {
         alert('Please fill in all required fields')
         return
       }
-      if (type === 'session' || type === 'priority-dm' || type === 'custom-service') { // Services require slot selection
+
+      // Validate Custom Inputs
+      if (entityDetails?.requiredInput === 'Resume' && !formData.resumeUrl) {
+        alert('Please provide your Resume URL')
+        return
+      }
+      if (entityDetails?.requiredInput === 'LinkedIn' && !formData.linkedinUrl) {
+        alert('Please provide your LinkedIn Profile URL')
+        return
+      }
+
+      if (requiresTimeSlot || requiresReview) {
         setStep(2)
       } else {
-        handlePayment() // Direct to payment for notes/products
+        handlePayment()
       }
     } else if (step === 2) {
-      if (!selectedSlot) {
+      if (requiresTimeSlot && !selectedSlot) {
         alert('Please select a time slot')
         return
       }
@@ -107,8 +160,8 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
         customerName: formData.fullName,
         customerEmail: formData.email,
         customerPhone: formData.whatsapp,
-        slotDateTime: selectedSlot?.toISOString(),
-        additionalInfo: formData.additionalInfo,
+        slotDateTime: selectedSlot?.toISOString(), // Will be undefined for non-slot bookings
+        additionalInfo: `${formData.additionalInfo}\n${(formData as any).resumeUrl ? `Resume: ${(formData as any).resumeUrl}` : ''}\n${(formData as any).linkedinUrl ? `LinkedIn: ${(formData as any).linkedinUrl}` : ''}`,
         entityId: entityId // Pass entityId to API
       }
 
@@ -311,40 +364,122 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
                     placeholder="Any specific requirements or questions..."
                   />
                 </div>
+
+                {entityDetails?.requiredInput === 'Resume' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Resume URL (Google Drive/Dropbox) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      name="resumeUrl"
+                      value={(formData as any).resumeUrl || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      placeholder="https://..."
+                      required
+                    />
+                  </div>
+                )}
+
+                {entityDetails?.requiredInput === 'LinkedIn' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      LinkedIn Profile URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      name="linkedinUrl"
+                      value={(formData as any).linkedinUrl || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      placeholder="https://linkedin.com/in/..."
+                      required
+                    />
+                  </div>
+                )}
               </div>
-              {/* Required Input Fields - Moved here */}
-              {/* Removed dynamic required input logic for now as it depended on service prop */}
             </>
           ) : null}
 
-          {!fetchingDetails && step === 2 && (type === 'session' || type === 'priority-dm' || type === 'custom-service') && (
+          {!fetchingDetails && step === 2 && requiresTimeSlot && (
             <div>
               <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Calendar size={20} />
                 Select a Time Slot
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-                {timeSlots.map((slot, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedSlot(slot)}
-                    className={`p-3 border rounded-md text-left hover:bg-gray-50 ${selectedSlot?.getTime() === slot.getTime()
-                      ? 'border-black bg-gray-100'
-                      : 'border-gray-300'
-                      }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Clock size={16} className="text-gray-500" />
-                      <span className="font-medium">{format(slot, 'MMM dd, yyyy')}</span>
-                    </div>
-                    <span className="text-sm text-gray-600">{format(slot, 'h:mm a')}</span>
-                  </button>
-                ))}
-              </div>
+
+              {loadingSlots ? (
+                <div className="flex justify-center p-8">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
+                </div>
+              ) : availableSlots.length === 0 ? (
+                <div className="text-center p-8 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
+                  <p>No slots available for the selected service.</p>
+                  <p className="text-sm mt-1">Please contact us for custom timing.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                  {availableSlots.map((slot) => (
+                    <button
+                      key={slot.id}
+                      onClick={() => setSelectedSlot(new Date(slot.startTime))}
+                      className={`p-3 border rounded-md text-left hover:bg-gray-50 ${selectedSlot?.getTime() === new Date(slot.startTime).getTime()
+                        ? 'border-black bg-gray-100'
+                        : 'border-gray-300'
+                        }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} className="text-gray-500" />
+                        <span className="font-medium">{format(new Date(slot.startTime), 'MMM dd, yyyy')}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">{format(new Date(slot.startTime), 'h:mm a')}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {/* Removed product preview logic */}
+          {!fetchingDetails && step === 2 && requiresReview && (
+            <div className="space-y-6">
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-semibold mb-3">Invoice Preview</h3>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-600">Item</span>
+                  <span className="font-medium text-gray-900">{displayTitle}</span>
+                </div>
+                <div className="flex justify-between items-center border-t border-gray-200 pt-2 mt-2">
+                  <span className="text-gray-900 font-bold">Total</span>
+                  <span className="text-xl font-bold text-gray-900">₹{displayPrice}</span>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <h3 className="text-sm font-bold text-blue-900 mb-2 uppercase tracking-wide">Customer Details</h3>
+                <div className="space-y-1 text-sm">
+                  <p><span className="text-blue-700">Name:</span> <span className="font-medium text-blue-900">{formData.fullName}</span></p>
+                  <p><span className="text-blue-700">Email:</span> <span className="font-medium text-blue-900">{formData.email}</span></p>
+                  <p><span className="text-blue-700">WhatsApp:</span> <span className="font-medium text-blue-900">{formData.whatsapp}</span></p>
+                </div>
+              </div>
+
+              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 flex gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <svg className="h-5 w-5 text-yellow-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-yellow-800">Important Check</h3>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Please check your <strong>Email ID</strong> and <strong>WhatsApp Number</strong> carefully.
+                    These will be used for your login and to access your order in the "My Orders" section.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="mt-6 flex gap-4 justify-end">
             {step > 1 && (
@@ -352,7 +487,7 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
                 onClick={() => setStep(step - 1)}
                 className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
               >
-                Back
+                {requiresReview && step === 2 ? 'Back to Edit Details' : 'Back'}
               </button>
             )}
 
@@ -362,7 +497,7 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
               className="bg-black text-white py-2 px-8 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
             >
               {loading ? 'Processing...' : (
-                (type === 'session' || type === 'priority-dm' || type === 'custom-service') && step === 1
+                (requiresTimeSlot || requiresReview) && step === 1
                   ? 'Continue'
                   : `Pay ₹${displayPrice}`
               )}

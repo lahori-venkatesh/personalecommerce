@@ -27,10 +27,16 @@ export default function AdminPayments() {
     try {
       const res = await fetch('/api/admin/payments')
       const data = await res.json()
-      setPayments(data)
+
+      if (Array.isArray(data)) {
+        setPayments(data)
+      } else {
+        setPayments([])
+      }
       setLoading(false)
     } catch (error) {
       console.error('Error fetching payments:', error)
+      setPayments([])
       setLoading(false)
     }
   }
