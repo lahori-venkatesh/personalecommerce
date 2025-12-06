@@ -448,16 +448,16 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h3 className="text-lg font-semibold mb-3">Order Summary</h3>
 
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Service</span>
-                    <p className="font-medium text-gray-900">{displayTitle}</p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:gap-2 text-sm">
+                    <span className="font-semibold text-gray-600 min-w-[80px]">Service:</span>
+                    <span className="font-medium text-gray-900">{displayTitle}</span>
                   </div>
 
                   {entityDetails?.description && (
-                    <div>
-                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description</span>
-                      <p className="text-sm text-gray-600 leading-relaxed">{entityDetails.description}</p>
+                    <div className="flex flex-col sm:flex-row sm:gap-2 text-sm">
+                      <span className="font-semibold text-gray-600 min-w-[80px]">Description:</span>
+                      <span className="text-gray-600 leading-relaxed">{entityDetails.description}</span>
                     </div>
                   )}
                 </div>

@@ -47,14 +47,14 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   }
 
   // Default values if no settings provided
-  const title = settings?.title || "Master Your Technical Interviews"
-  const subtitle = settings?.subtitle || "Unlock your potential with personalized coaching, expert mentorship, and curated resources designed for your success."
+  const title = settings?.title || "Get Your Dream Job in the Software Industry"
+  const subtitle = settings?.subtitle || "Level up your skills, improve your resume, and master interviews with personalized coaching built for student."
   const theme = settings?.theme || "Modern"
   const stats = typeof settings?.stats === 'string' ? JSON.parse(settings.stats) : (settings?.stats || [
-    { label: 'Students Mentored', value: '500+' },
+    { label: 'Students Mentored', value: '10+' },
     { label: 'Success Rate', value: '95%' },
-    { label: 'Companies Cracked', value: '50+' },
-    { label: 'Rating', value: '4.9/5' },
+    { label: 'Companies Cracked', value: '10+' },
+    { label: 'Rating', value: '4.3/5' },
   ])
 
   const renderButtons = () => (
