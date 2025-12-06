@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BookingModal from './BookingModal'
 import { Calendar, BookOpen, ArrowRight, Star, Users, Briefcase } from 'lucide-react'
 
@@ -22,6 +22,19 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
   const [bookingType, setBookingType] = useState<'session' | 'notes' | 'priority-dm' | 'custom-service' | 'custom-product'>('session')
   const [entityId, setEntityId] = useState<string>('')
 
+  const [services, setServices] = useState<any[]>([])
+
+  // Fetch services on mount to find IDs for "1:1 Session" and "Priority DM"
+  useEffect(() => {
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setServices(data)
+      })
+      .catch(err => console.error('Error fetching services in Hero:', err))
+  }, [])
+
+
   const handleAction = (action: string) => {
     if (action.startsWith('service:')) {
       setBookingType('custom-service')
@@ -32,11 +45,29 @@ export default function Hero({ settings }: { settings?: HeroSettings | null }) {
       setEntityId(action.split(':')[1])
       setShowBookingModal(true)
     } else if (action === 'session') {
-      setBookingType('session')
-      setShowBookingModal(true)
+      // Find "1:1 Session" service
+      const sessionService = services.find(s => s.title.includes('1:1 Session') || s.category === '1:1 Session')
+      if (sessionService) {
+        setBookingType('custom-service')
+        setEntityId(sessionService.id)
+        setShowBookingModal(true)
+      } else {
+        // Fallback if not found
+        setBookingType('session')
+        setShowBookingModal(true)
+      }
     } else if (action === 'priority-dm') {
-      setBookingType('priority-dm')
-      setShowBookingModal(true)
+      // Find "Priority DM" service
+      const dmService = services.find(s => s.title.includes('Priority DM') || s.category === 'Priority DM')
+      if (dmService) {
+        setBookingType('custom-service')
+        setEntityId(dmService.id)
+        setShowBookingModal(true)
+      } else {
+        // Fallback
+        setBookingType('priority-dm')
+        setShowBookingModal(true)
+      }
     } else if (action === 'notes') {
       // Scroll to notes section
       const notesSection = document.getElementById('notes')
