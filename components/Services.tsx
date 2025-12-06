@@ -89,7 +89,7 @@ const ServiceCard = ({ service, onBook, index, onPreview }: { service: Service; 
             </span>
             <button
               onClick={() => onBook(service)}
-              className="flex-1 bg-gray-900 text-white py-2.5 px-4 rounded-xl font-medium hover:bg-primary-600 transition-colors shadow-lg shadow-gray-200 hover:shadow-primary-500/30 text-sm"
+              className="bg-gray-900 text-white py-2.5 px-8 rounded-xl font-medium hover:bg-primary-600 transition-colors shadow-lg shadow-gray-200 hover:shadow-primary-500/30 text-sm"
             >
               Buy Now
             </button>
