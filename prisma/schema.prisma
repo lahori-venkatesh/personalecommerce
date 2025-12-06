@@ -90,6 +90,7 @@ model Order {
   customerName  String
   customerEmail String
   customerPhone String
+  additionalInfo String?
   slotDateTime  DateTime?
   slot          Slot?
   fulfilled     Boolean     @default(false)

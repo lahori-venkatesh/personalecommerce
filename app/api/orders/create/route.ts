@@ -81,6 +81,24 @@ export async function POST(request: Request) {
       })
     }
 
+    // Check slot availability if applicable
+    if (slotDateTime && (serviceId || entityId)) {
+      const targetServiceId = serviceId || entityId
+      const slotTime = new Date(slotDateTime)
+
+      const existingSlot = await prisma.slot.findFirst({
+        where: {
+          serviceId: targetServiceId!,
+          startTime: slotTime,
+          isBooked: true
+        }
+      })
+
+      if (existingSlot) {
+        return NextResponse.json({ error: 'This slot is already booked. Please select another time.' }, { status: 409 })
+      }
+    }
+
     // Create order in database
     const order = await prisma.order.create({
       data: {
@@ -92,9 +110,35 @@ export async function POST(request: Request) {
         customerName,
         customerEmail,
         customerPhone,
+        additionalInfo,
         slotDateTime: slotDateTime ? new Date(slotDateTime) : null
       }
     })
+
+    // Mark slot as booked if applicable
+    if (slotDateTime && (serviceId || entityId)) {
+      const targetServiceId = serviceId || entityId
+      const slotTime = new Date(slotDateTime)
+
+      // Find the slot to update
+      const slotToBook = await prisma.slot.findFirst({
+        where: {
+          serviceId: targetServiceId!,
+          startTime: slotTime,
+          isBooked: false
+        }
+      })
+
+      if (slotToBook) {
+        await prisma.slot.update({
+          where: { id: slotToBook.id },
+          data: {
+            isBooked: true,
+            orderId: order.id
+          }
+        })
+      }
+    }
 
     // Create Razorpay order
     const razorpayOrder = await razorpay.orders.create({

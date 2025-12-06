@@ -88,8 +88,10 @@ export default function BookingModal({ type, entityId, onClose }: BookingModalPr
     (entityDetails?.requiresSlot) ||
     (type === 'session')
 
-  // Determine if review step is required (for Resume Templates)
-  const requiresReview = type === 'custom-service' && entityDetails?.category === 'Resume Templates'
+  // Determine if review step is required
+  // We want a review step for all services that don't require a time slot, 
+  // to ensure users can verify their details (like Resume Templates flow).
+  const requiresReview = !requiresTimeSlot
 
   useEffect(() => {
     if (requiresTimeSlot && entityId && step === 2) {
